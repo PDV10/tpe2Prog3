@@ -37,9 +37,14 @@ public class Estado {
 		}
 	}
 
-	private void addArco(Arco<Integer> arco) {
+	public void addArco(Arco<Integer> arco) {
 		this.solucionParcial.add(arco);
 		setKm(arco.getEtiqueta());
+	}
+
+	public void removeArco(Arco<Integer> arco) {
+		this.solucionParcial.remove(arco);
+		setKm(-arco.getEtiqueta());
 	}
 
 	public int getPoss() {

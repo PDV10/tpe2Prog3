@@ -1,6 +1,7 @@
 package tpe2;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Backtracking<T> {
 	ArrayList<Arco<Integer>> dataset = new ArrayList<Arco<Integer>>();
@@ -28,7 +29,27 @@ public class Backtracking<T> {
 				this.mejoresKms = e.getKm();
 			}
 		}else {
-			
+
+			Iterator<Arco<Integer>> arcos = this.dataset.iterator();
+			while(arcos.hasNext()){
+				Arco<Integer> arco = arcos.next();
+
+				if(arco.getEtiqueta() + e.getKm() < this.mejoresKms){
+					if(!e.getSolucionParcial().contains(arco)){
+						e.addArco(arco);
+						e.setPoss(e.getPoss() + 1);
+						if(e.getSolucionParcial().size() <= this.estaciones.size()-1) {
+							backtracking(e);
+						}
+						e.removeArco(arco);
+						e.setPoss(e.getPoss() - 1);
+					}
+				}
+
+
+
+			}
+
 		}
 	}
 }
