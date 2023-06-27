@@ -11,6 +11,7 @@ public class CSVReader {
 
 	private String path;
 	public ArrayList<Arco<Integer>> arcos = new ArrayList<>();
+	public ArrayList<Integer> estaciones = new ArrayList<>();
 	
 	public CSVReader(String path) {
 		this.path = path;
@@ -31,6 +32,13 @@ public class CSVReader {
 			
 			Arco<Integer> arco = new Arco(origen,destino,etiqueta);
 			arcos.add(arco);
+			if(!estaciones.contains(origen)) {
+				
+				estaciones.add(origen);
+			}
+			if(!estaciones.contains(destino)) {
+				estaciones.add(destino);
+			}
 		}
 	}
 
