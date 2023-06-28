@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Greedy {
-    private MergeSort mergeSort;
-    private ArrayList<Arco<Integer>> mejorSolucion = new ArrayList<Arco<Integer>>();
     private ArrayList<Integer> estaciones = new ArrayList<>();
-    private ArrayList<Integer> estacionesVisitadas = new ArrayList<>();
+    ArrayList<Arco<Integer>> solucion = new ArrayList<Arco<Integer>>();
     private UnionFind unionFind;
     private int metrica;
     private int mejoresKms;
-
+    
     public Greedy(ArrayList<Integer> estaciones){
         this.estaciones = estaciones;
         this.metrica = 0;
@@ -20,63 +18,37 @@ public class Greedy {
         this.unionFind = new UnionFind(this.estaciones.size());
     }
 
-
-
-
     public ArrayList<Arco<Integer>> greedy(ArrayList<Arco<Integer>> dataset){
-        ArrayList<Arco<Integer>> solucion = new ArrayList<Arco<Integer>>();
+        
         burbuja(dataset); //ORDENAR DE MENOR A MAYOR km
         Iterator<Arco<Integer>> it = dataset.iterator();
-        boolean flag = true;
-        while (it.hasNext() && flag){
+        
+        while (it.hasNext() && solucion.size() <= this.estaciones.size()-1){
             this.metrica++;
             Arco<Integer> arco = it.next();
-
             int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen());
-            int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino());
-            if(solucion.size() == this.estaciones.size() - 1 && this.estacionesVisitadas.size() == this.estaciones.size()) {
-                this.estaciones.addAll(this.estaciones);
-                flag = false;
-                System.out.println(this.estacionesVisitadas);
+    		int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino());
+    		
+    		// si el grafo no es conexo, entra al if y une el origen y el destino del arco
+            if(!esConexo(origenEstacion,destinoEstacion)){
+            	solucion.add(arco);
+            	this.mejoresKms += arco.getEtiqueta();
+            	unionFind.union(origenEstacion, destinoEstacion);
             }
-            if(noRedundante(arco)){
-                solucion.add(arco);
-                this.mejoresKms += arco.getEtiqueta();
-                UnionFind clon = getUnionFind().clone();
-                unionFind.union(origenEstacion, destinoEstacion);
-            }
-
-            if(!this.estacionesVisitadas.contains(arco.getVerticeDestino())){
-                estacionesVisitadas.add(arco.getVerticeDestino());
-            }
-            if(!this.estacionesVisitadas.contains(arco.getVerticeOrigen())){
-                estacionesVisitadas.add(arco.getVerticeOrigen());
-            }
-
-            /*if(!solucion.contains(arco)){
-                if (!estacionesVisitadas.contains(arco.getVerticeDestino())){
-                    if(noRedundante(arco)){
-                        solucion.add(arco);
-                        this.mejoresKms += arco.getEtiqueta();
-                        UnionFind clon = getUnionFind().clone();
-                        unionFind.union(origenEstacion, destinoEstacion);
-                    }
-                }
-
-
-
-            }*/
-
-
         }
         return solucion;
     }
+    
+    private boolean seUsanTodas(ArrayList<Integer> estaciones) {
+		
+		return solucion.size()<= this.estaciones.size()-1;
+	}
 
-    public boolean noRedundante(Arco<Integer> arco){
-        int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen());
-        int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino());
-        return origenEstacion != destinoEstacion;
-    }
+	// si los padres de los conjuntos del origen y destino del arco son iguales (forman parte del mismo conjunto)
+    private boolean esConexo(int origenEstacion,int destinoEstacion) {
+		return unionFind.find(origenEstacion) == unionFind.find(destinoEstacion);
+	}
+    
     public static void burbuja(ArrayList<Arco<Integer>> arcos) {
         for (int i = 0; i < arcos.size(); i++) {
             for (int j = 0; j < arcos.size() - 1; j++) {
@@ -98,9 +70,6 @@ public class Greedy {
         return metrica;
     }
 
-    public ArrayList<Integer> getEstaciones() {
-        return estaciones;
-    }
     public UnionFind getUnionFind() {
         return unionFind;
     }

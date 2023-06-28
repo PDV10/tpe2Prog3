@@ -62,9 +62,9 @@ public class Backtracking<T> {
 				}
 			}
 				e.setPoss(possActual+1);
-				if(e.getSolucionParcial().size() > 0) {
-					backtracking(e);					
-				}
+				
+				backtracking(e);					
+			
 				e.setPoss(possActual);		
 		}
 	}
