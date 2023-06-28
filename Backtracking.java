@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Backtracking<T> {
-	ArrayList<Arco<Integer>> dataset = new ArrayList<Arco<Integer>>();
-	ArrayList<Arco<Integer>> mejorSolucion = new ArrayList<Arco<Integer>>();
-	ArrayList<Integer> estaciones = new ArrayList<>();
-	int mejoresKms;
-	
+	private ArrayList<Arco<Integer>> dataset = new ArrayList<Arco<Integer>>();
+	private ArrayList<Arco<Integer>> mejorSolucion = new ArrayList<Arco<Integer>>();
+	private ArrayList<Integer> estaciones = new ArrayList<>();
+	private UnionFind unionFind ;
+	private int metrica ;
+	private int mejoresKms;
+
+
 	public Backtracking(ArrayList<Arco<Integer>> dataset, ArrayList<Integer> estaciones) {
 		this.dataset = dataset;
 		this.estaciones = estaciones;
 		this.mejoresKms = 0;
+		this.metrica = 0;
+		this.unionFind = new UnionFind(estaciones.size());
 	}
 	
 	public ArrayList<Arco<Integer>> back(){
@@ -22,35 +27,63 @@ public class Backtracking<T> {
 	}
 
 	private	void backtracking(Estado e) {
-		if(e.getSolucionParcial().size() == this.estaciones.size()-1) {
-			if(e.getKm() <= this.mejoresKms) {
-				mejorSolucion.clear();
-				mejorSolucion.addAll(e.getSolucionParcial());
-				this.mejoresKms = e.getKm();
+		this.metrica++;
+		
+		if(e.getPoss() == dataset.size() || e.getSolucionParcial().size() == this.estaciones.size()-1) {
+			if(this.unionFind.numberOfSets() == 1) {
+				if(e.getKm() <= this.mejoresKms || this.mejoresKms == 0) {					
+					this.mejoresKms = e.getKm();
+					mejorSolucion.clear();
+					mejorSolucion.addAll(e.getSolucionParcial());
+				}
 			}
 		}else {
-
-			Iterator<Arco<Integer>> arcos = this.dataset.iterator();
-			while(arcos.hasNext()){
-				Arco<Integer> arco = arcos.next();
-
-				if(arco.getEtiqueta() + e.getKm() < this.mejoresKms){
-					if(!e.getSolucionParcial().contains(arco)){
-						e.addArco(arco);
-						e.setPoss(e.getPoss() + 1);
-						if(e.getSolucionParcial().size() <= this.estaciones.size()-1) {
-							backtracking(e);
-						}
-						e.removeArco(arco);
-						e.setPoss(e.getPoss() - 1);
-					}
+			int possActual = e.getPoss();
+			Arco<Integer> arco = this.dataset.get(possActual);
+			
+			int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen());
+			int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino());
+			
+			if(unionFind.find(origenEstacion) != unionFind.find(destinoEstacion)){
+				if((e.getKm() + arco.getEtiqueta() < this.mejoresKms) || this.mejoresKms == 0) {		
+					
+					e.addArco(arco);
+					e.setKm(e.getKm() + arco.getEtiqueta());
+					UnionFind clon = getUnionFind().clone();
+					unionFind.union(origenEstacion, destinoEstacion);
+					e.setPoss(possActual+1);
+					
+					backtracking(e);	
+						
+					setUnionFind(clon);
+					e.removeArco(arco);
+					e.setPoss(possActual);	
+					e.setKm(e.getKm()-arco.getEtiqueta());
 				}
-
-
-
 			}
-
+				e.setPoss(possActual+1);
+				if(e.getSolucionParcial().size() > 0) {
+					backtracking(e);					
+				}
+				e.setPoss(possActual);		
 		}
+	}
+	
+
+	public void setUnionFind(UnionFind unionFind) {
+		this.unionFind = unionFind;
+	}
+
+	public UnionFind getUnionFind() {
+		return unionFind;
+	}
+	
+	public int getMetrica() {
+		return metrica;
+	}
+
+	public int getMejoresKms() {
+		return mejoresKms;
 	}
 }
 

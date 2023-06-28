@@ -16,35 +16,28 @@ public class Estado {
 		estacionesVisitadas = new ArrayList<>();
 	}
 	
-	// retornamos el clone ?
-	public ArrayList<Arco<Integer>> getSolucionParcial() {
-		return solucionParcial;
+	public ArrayList<Integer> getEstacionesVisitadas() {
+		return estacionesVisitadas;
 	}
 	
-	/**
-	 *  metodo que se va quedando con la mejor solucion parcial
-	 * 	primero borra la lista (es caso de que exista una anterior/peor) 
-	 * 	luego completa con la solucion que llega por parametro
-	 * 	y mantiene actualizado los km
-	 */
-	public void setSolucionParcial(ArrayList<Arco<Integer>> s) {
-		this.solucionParcial.clear();
-		km = 0;
-		Iterator<Arco<Integer>> arcos = s.iterator();
-		while(arcos.hasNext()) {
-			Arco<Integer> arco = arcos.next();
-			addArco(arco);
-		}
+	public void addEstacionVisitada(int e) {
+		this.estacionesVisitadas.add(e);
+	}
+	
+	public void clearEstacionVisitada() {
+		this.estacionesVisitadas.clear();
+	}
+
+	public ArrayList<Arco<Integer>> getSolucionParcial() {
+		return solucionParcial;
 	}
 
 	public void addArco(Arco<Integer> arco) {
 		this.solucionParcial.add(arco);
-		setKm(arco.getEtiqueta());
 	}
 
 	public void removeArco(Arco<Integer> arco) {
 		this.solucionParcial.remove(arco);
-		setKm(-arco.getEtiqueta());
 	}
 
 	public int getPoss() {
@@ -60,7 +53,7 @@ public class Estado {
 	}
 
 	public void setKm(int km) {
-		this.km += km;
+		this.km = km;
 	}
 	
 }
