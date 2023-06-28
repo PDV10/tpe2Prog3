@@ -33,7 +33,6 @@ public class CSVReader {
 			Arco<Integer> arco = new Arco(origen,destino,etiqueta);
 			arcos.add(arco);
 			if(!estaciones.contains(origen)) {
-	
 				estaciones.add(origen);
 			}
 			if(!estaciones.contains(destino)) {
