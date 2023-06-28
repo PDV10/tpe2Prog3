@@ -9,7 +9,7 @@ public class Main {
 
 		String patho = "C:/Users/patri/programacion3/trabajoPractico3/src/tpe2/datasets";
 		String path = "./datasets/dataset1.txt";
-		CSVReader reader = new CSVReader(patho+"/dataset3.txt");//pato
+		CSVReader reader = new CSVReader(patho+"/dataset2.txt");//pato
 		//CSVReader reader = new CSVReader(path); //agus
 		reader.read();
 		
