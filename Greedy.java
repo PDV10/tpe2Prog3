@@ -10,6 +10,7 @@ public class Greedy {
     private UnionFind unionFind;
     private int metrica;
     private int mejoresKms;
+
     
     public Greedy(ArrayList<Integer> estaciones){
         this.estaciones = estaciones;
@@ -23,7 +24,7 @@ public class Greedy {
         burbuja(dataset); //ORDENAR DE MENOR A MAYOR km
         Iterator<Arco<Integer>> it = dataset.iterator();
         
-        while (it.hasNext() && solucion.size() <= this.estaciones.size()-1){
+        while (it.hasNext() && this.unionFind.numberOfSets() != 1){
             this.metrica++;
             Arco<Integer> arco = it.next();
             int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen());
@@ -39,11 +40,6 @@ public class Greedy {
         return solucion;
     }
     
-    private boolean seUsanTodas(ArrayList<Integer> estaciones) {
-		
-		return solucion.size()<= this.estaciones.size()-1;
-	}
-
 	// si los padres de los conjuntos del origen y destino del arco son iguales (forman parte del mismo conjunto)
     private boolean esConexo(int origenEstacion,int destinoEstacion) {
 		return unionFind.find(origenEstacion) == unionFind.find(destinoEstacion);
