@@ -29,7 +29,7 @@ public class Backtracking<T> {
 	private	void backtracking(Estado e) {
 		this.metrica++;
 		
-		if(e.getPoss() == dataset.size() || e.getSolucionParcial().size() == this.estaciones.size()-1) {
+		if(e.getPoss() == dataset.size() || e.getSolucionParcial().size() == this.estaciones.size()-1) { //O(2^T)
 			if(this.unionFind.numberOfSets() == 1) {
 				if(e.getKm() <= this.mejoresKms || this.mejoresKms == 0) {					
 					this.mejoresKms = e.getKm();
@@ -38,13 +38,13 @@ public class Backtracking<T> {
 				}
 			}
 		}else {
-			int possActual = e.getPoss();
-			Arco<Integer> arco = this.dataset.get(possActual);
+			int possActual = e.getPoss();//O(1)
+			Arco<Integer> arco = this.dataset.get(possActual); //O(1)
 			
-			int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen());
-			int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino());
+			int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen()); //O(e)
+			int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino()); //O(e)
 			
-			if(unionFind.find(origenEstacion) != unionFind.find(destinoEstacion)){
+			if(unionFind.find(origenEstacion) != unionFind.find(destinoEstacion)){ //O(e)
 				if((e.getKm() + arco.getEtiqueta() < this.mejoresKms) || this.mejoresKms == 0) {		
 					
 					e.addArco(arco);

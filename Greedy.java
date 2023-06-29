@@ -24,28 +24,32 @@ public class Greedy {
         burbuja(dataset); //ORDENAR DE MENOR A MAYOR km
         Iterator<Arco<Integer>> it = dataset.iterator();
         
-        while (it.hasNext() && this.unionFind.numberOfSets() != 1){
+        while (it.hasNext() && !esConexo()){ //O(a*e)
             this.metrica++;
             Arco<Integer> arco = it.next();
-            int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen());
-    		int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino());
+            int origenEstacion = estaciones.indexOf(arco.getVerticeOrigen()); //O(e)
+    		int destinoEstacion = estaciones.indexOf(arco.getVerticeDestino()); //O(e)
     		
     		// si el grafo no es conexo, entra al if y une el origen y el destino del arco
-            if(!esConexo(origenEstacion,destinoEstacion)){
+            if(!mismoConjunto(origenEstacion,destinoEstacion)){
             	solucion.add(arco);
             	this.mejoresKms += arco.getEtiqueta();
-            	unionFind.union(origenEstacion, destinoEstacion);
+            	unionFind.union(origenEstacion, destinoEstacion); //O(e)
             }
         }
         return solucion;
     }
     
+	private boolean esConexo() {
+		return this.unionFind.numberOfSets() == 1;
+	}
+
 	// si los padres de los conjuntos del origen y destino del arco son iguales (forman parte del mismo conjunto)
-    private boolean esConexo(int origenEstacion,int destinoEstacion) {
+    private boolean mismoConjunto(int origenEstacion,int destinoEstacion) {
 		return unionFind.find(origenEstacion) == unionFind.find(destinoEstacion);
 	}
     
-    public static void burbuja(ArrayList<Arco<Integer>> arcos) {
+    public static void burbuja(ArrayList<Arco<Integer>> arcos) { //O(a^2 )
         for (int i = 0; i < arcos.size(); i++) {
             for (int j = 0; j < arcos.size() - 1; j++) {
                 Arco<Integer> arcoActual = arcos.get(j);

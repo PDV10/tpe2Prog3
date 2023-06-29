@@ -1,4 +1,4 @@
-/*
+
 package tpe2;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -197,8 +197,5 @@ public class MainPrueba {
 	   while (arcos.hasNext()) {
 		   System.out.println(arcos.next());
 	   }
-	
 	}
-
 }
-*/
